@@ -1,28 +1,31 @@
 package com.stgconsulting.aut
 
-import org.junit.Test
+import com.winterbe.expekt.should
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
 
-class LogAnalyzerTest2 {
+class LogAnalyzerTest2: Spek ({
 
-    companion object {
-        @JvmStatic
-        fun makeLogAnalyzer(): LogAnalyzer {
-            return LogAnalyzer()
+    fun makeLogAnalyzer(): LogAnalyzer {
+        return LogAnalyzer()
+    }
+
+    given("isValidLogFileName") {
+        val analyzer = makeLogAnalyzer()
+
+        on("empty filename") {
+            val exception = assertFailsWith(IllegalArgumentException::class, {
+                analyzer.isValidLogFileName("")
+            })
+
+            it("should throw an exception") {
+                exception.message!!.should.contain("Filename must be provided")
+            }
         }
     }
 
-    @Test
-    fun isValidLogFileName_EmptyFilename_ThrowsException() {
-        val analyzer = makeLogAnalyzer()
-
-        val exception = assertFailsWith(IllegalArgumentException::class, {
-            analyzer.isValidLogFileName("")
-        })
-
-        assertTrue { exception.message!!.contains("Filename must be provided") }
-    }
-
-}
+})

@@ -1,36 +1,32 @@
 package com.stgconsulting.aut
 
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
+import com.winterbe.expekt.should
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 
 
-@RunWith(Parameterized::class)
-class LogAnalyzerTest3(val filename: String, val expected: Boolean) {
+class LogAnalyzerTest3: Spek({
 
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters
-        fun data() : Collection<Array<Any>> {
-            return listOf(
-                    arrayOf("fileWithBadExtension.foo", false),
-                    arrayOf("fileWithBadExtension.slf", true))
-        }
-
-        @JvmStatic
-        fun makeLogAnalyzer(): LogAnalyzer {
-            return LogAnalyzer()
-        }
+    fun makeLogAnalyzer(): LogAnalyzer {
+        return LogAnalyzer()
     }
 
-    @Test
-    fun isValidLogFileName_WhenCalled_ChangesWasLastFilenameValid() {
-        val analyzer = makeLogAnalyzer()
+    given("isValidLogFileName") {
+        listOf(
+                listOf("fileWithBadExtension.foo", false),
+                listOf("fileWithBadExtension.slf", true)
+        ).forEach({ (filename, expected) ->
+            on("when called with $filename") {
+                val analyzer = makeLogAnalyzer()
+                analyzer.isValidLogFileName(filename as String)
+                val result = analyzer.wasLastFilenameValid
 
-        analyzer.isValidLogFileName(filename)
-        val result = analyzer.wasLastFilenameValid
-        assertEquals(expected, result)
+                it("should change wasLastFilenameValid to $expected") {
+                    result.should.equal(expected as Boolean)
+                }
+            }
+        })
     }
-}
+})

@@ -1,35 +1,35 @@
 package com.stgconsulting.aut
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
+import com.winterbe.expekt.should
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 
 
-@RunWith(Parameterized::class)
-class LogAnalyzerTest(val filename: String, val expected: Boolean) {
+class LogAnalyzerTest: Spek({
 
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters
-        fun data() : Collection<Array<Any>> {
-            return listOf(
-                    arrayOf("fileWithBadExtension.foo", false),
-                    arrayOf("fileWithBadExtension.slf", true),
-                    arrayOf("fileWithBadExtension.SLF", true))
-        }
-
-        @JvmStatic
-        fun makeLogAnalyzer(): LogAnalyzer {
-            return LogAnalyzer()
-        }
+    fun makeLogAnalyzer(): LogAnalyzer {
+        return LogAnalyzer()
     }
 
-    @Test
-    fun isValidLogFileName_MultipleExtensions_ReturnsResult() {
-        val analyzer = makeLogAnalyzer()
-        val result = analyzer.isValidLogFileName(filename)
+    given("isValidLogFileName") {
+        listOf(
+                listOf("fileWithBadExtension.foo", false),
+                listOf("fileWithBadExtension.slf", true),
+                listOf("fileWithBadExtension.SLF", true)
+        ).forEach({ (filename, expected) ->
+            given(filename as String) {
 
-        assertEquals(expected, result)
+                on("when checking for valid filename extension") {
+                    val analyzer = makeLogAnalyzer()
+                    val result = analyzer.isValidLogFileName(filename)
+
+                    it("should note if the filename is valid or not") {
+                        result.should.equal(expected as Boolean)
+                    }
+                }
+            }
+        })
     }
-}
+})
