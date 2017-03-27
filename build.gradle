@@ -33,6 +33,6 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
 
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testCompile 'junit:junit:4.12'
+//    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile 'io.kotlintest:kotlintest:2.0.0'
 }
