@@ -19,14 +19,15 @@ class LogAnalyzerTest3(val filename: String, val expected: Boolean) {
         }
 
         @JvmStatic
-        fun makeLogAnalyzer(): LogAnalyzer {
-            return LogAnalyzer()
+        fun makeLogAnalyzer(): TestableLogAnalyzer {
+            return TestableLogAnalyzer()
         }
     }
 
     @Test
     fun isValidLogFileName_WhenCalled_ChangesWasLastFilenameValid() {
         val analyzer = makeLogAnalyzer()
+        analyzer.fileExtensionList = listOf(".slf")
 
         analyzer.isValidLogFileName(filename)
         val result = analyzer.wasLastFilenameValid

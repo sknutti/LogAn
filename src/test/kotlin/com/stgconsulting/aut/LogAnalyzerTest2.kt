@@ -9,8 +9,8 @@ class LogAnalyzerTest2 {
 
     companion object {
         @JvmStatic
-        fun makeLogAnalyzer(): LogAnalyzer {
-            return LogAnalyzer()
+        fun makeLogAnalyzer(): TestableLogAnalyzer {
+            return TestableLogAnalyzer()
         }
     }
 

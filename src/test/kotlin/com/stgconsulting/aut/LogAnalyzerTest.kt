@@ -20,14 +20,15 @@ class LogAnalyzerTest(val filename: String, val expected: Boolean) {
         }
 
         @JvmStatic
-        fun makeLogAnalyzer(): LogAnalyzer {
-            return LogAnalyzer()
+        fun makeLogAnalyzer(): TestableLogAnalyzer {
+            return TestableLogAnalyzer()
         }
     }
 
     @Test
     fun isValidLogFileName_MultipleExtensions_ReturnsResult() {
         val analyzer = makeLogAnalyzer()
+        analyzer.fileExtensionList = listOf(".slf")
         val result = analyzer.isValidLogFileName(filename)
 
         assertEquals(expected, result)
